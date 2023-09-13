@@ -25,7 +25,7 @@ This file contains an HTML document that displays the current date and time. It 
 It also has buttons that can access the start and stop endpoints and display their responses. 
 
 The application uses the uvicorn server to run the FastAPI application on http://0.0.0.0:8000.
-
+![WebApp Image](images/webapp.png)
 
 To run the code demo, execute the main.py file.
 
