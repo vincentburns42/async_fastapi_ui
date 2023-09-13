@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Date and Time Animation</title>
+<style>
+/* CSS styles for the page */
+body {
+  font-family: sans-serif;
+  position: relative;
+}
+
+.container {
+  width: 300px;
+  margin: 0 auto;
+}
+
+.date-time-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 20px;
+}
+
+.date {
+  font-size: 24px;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.time {
+  font-size: 16px;
+}
+
+.animated {
+  animation: infinite 1s linear;
+}
+
+.dark-mode {
+  background-color: black;
+  color: white;
+}
+
+.dark-mode-toggle {
+  border: 1px solid #333;
+  background-color: transparent;
+  color: #333;
+  font-size: 1em;
+  padding: 0.5em 1em;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  border-radius: 5px;
+}
+
+.dark-mode-toggle:hover {
+  color: #666;
+}
+
+.dark-mode-toggle.dark-mode {
+  color: #ccc;
+}
+
+.button-container {
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.darkmode-button-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.response {
+  text-align: center;
+  font-weight: bold;
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="date-time-container">
+    <div class="date animated">
+      <span id="day"></span>,
+      <span id="month"></span>
+      <span id="year"></span>
+    </div>
+    <div class="time animated" id="time"></div>
+  </div>
+  <div class="darkmode-button-container">
+    <button onclick="toggleDarkMode()" class="dark-mode-toggle">Toggle Dark Mode</button>
+  </div>
+  <div class="button-container">
+    <button onclick="startTask()" class="dark-mode-toggle">Start Task</button>
+    <button onclick="stopTask()" class="dark-mode-toggle">Stop Task</button>
+  </div>
+  <div id="response" class="response"></div>
+</div>
+<script>
+// JavaScript code for the page
+
+// Get the HTML elements needed
+const day = document.getElementById("day");
+const month = document.getElementById("month");
+const year = document.getElementById("year");
+const time = document.getElementById("time");
+const response = document.getElementById("response");
+
+// Get the current date and time
+const now = new Date();
+
+// Set the date and time elements with the current date and time
+const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+day.innerHTML = now.getDate();
+month.innerHTML = months[now.getMonth()];
+year.innerHTML = now.getFullYear();
+time.innerHTML = now.toLocaleTimeString();
+
+// Animate the date and time elements every second
+setInterval(() => {
+  const now = new Date();  // Update the current date and time
+  day.innerHTML = now.getDate();
+  month.innerHTML = months[now.getMonth()];
+  year.innerHTML = now.getFullYear();
+  time.innerHTML = now.toLocaleTimeString();
+}, 1000);
+
+// Function to start a task when the "Start Task" button is clicked
+async function startTask() {
+  try {
+    const response = await fetch("/start", { method: "POST" }); // Send a POST request to the "/start" endpoint
+    const data = await response.json(); // Parse the response as JSON
+    showResponse(data.message); // Show the response message on the page
+  } catch (error) {
+    console.error(error); // Log any errors to the console
+    showResponse("Error occurred while starting the task"); // Show an error message on the page
+  }
+}
+
+// Function to stop a task when the "Stop Task" button is clicked
+async function stopTask() {
+  try {
+    const response = await fetch("/stop", { method: "POST" }); // Send a POST request to the "/stop" endpoint
+    const data = await response.json(); // Parse the response as JSON
+    showResponse(data.message); // Show the response message on the page
+  } catch (error) {
+    console.error(error); // Log any errors to the console
+    showResponse("Error occurred while stopping the task"); // Show an error message on the page
+  }
+}
+
+// Function to toggle dark mode when the "Toggle Dark Mode" button is clicked
+function toggleDarkMode() {
+  const body = document.body;
+  body.classList.toggle("dark-mode"); // Toggle the "dark-mode" class on the body element
+}
+
+// Function to show a response message on the page
+function showResponse(message) {
+  response.textContent = message; // Set the text content of the "response" element to the provided message
+}
+</script>
+</body>
+</html>
