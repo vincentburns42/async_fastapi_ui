@@ -2,6 +2,7 @@ import asyncio
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
 import uvicorn
+from confluent_kafka import Producer
 
 # Define a class for our task
 class MyClass:
@@ -23,8 +24,29 @@ class MyClass:
         Prints "Hello World" every second until running is set to False.
         """
         self.running = True
+        
+        def delivery_report(err, msg):
+            """ Called once for each message produced to indicate delivery result.
+                Triggered by poll() or flush(). """
+            if err is not None:
+                print(f"Message delivery failed: {err}")
+            else:
+                print(f"Message delivered to {msg.topic()} [{msg.partition()}]")
+
+        # Set up the Kafka configuration
+        config = {
+            'bootstrap.servers': 'kafka:9092',  # Replace with the address of your Kafka broker
+        }
+
+        # Create a Kafka producer instance with provided configurations
+        producer = Producer(config)
+
+        # Wait for any outstanding messages to be delivered and delivery reports to be received
+        producer.flush()
         while self.running:
             print("Hello World")
+            # Produce a message to the 'test' topic (replace 'test' with your target topic)
+            producer.produce('test', key='key', value='value', callback=delivery_report)
             await asyncio.sleep(1)
 
     async def stop(self):
