@@ -22,6 +22,7 @@ class MyClass:
         Start the task.
 
         Prints "Hello World" every second until running is set to False.
+        Publishes message to kafka test topic until running is set to False.
         """
         self.running = True
         
