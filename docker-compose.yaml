@@ -1,0 +1,5 @@
+services:
+  async-fastapi-ui:
+    image: async-fastapi-ui
+    ports:
+      - 8000:8000
